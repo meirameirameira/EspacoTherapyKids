@@ -1,4 +1,4 @@
-# Espaço Therapy Kids Store
+# Espaço Therapy Kids
 
 **Gerenciamento de pacientes e sessões terapêuticas (Fonoaudiologia, Terapia Ocupacional e ABA)**
 
