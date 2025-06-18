@@ -1,0 +1,126 @@
+Paciente [1] - Lucas
+
+Fonoaudiologia:
+ Valor da Sessão: R$360.0
+ Horas de Sessão: 8h
+ Total: R$2880.0
+ Reembolso: R$184.0
+ Horas para Nota Fiscal: 16h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia ABA:
+ Valor do Pacote: R$3000.0
+ Reembolso: R$340.0
+ Horas para Nota Fiscal: 9h
+-------------------------------------------
+Paciente [2] - Fulano
+
+Fonoaudiologia:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$352.0
+ Horas de Sessão: 4h
+ Total: R$1408.0
+ Reembolso: R$125.0
+ Horas para Nota Fiscal: 12h
+
+Terapia ABA:
+ Valor do Pacote: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+-------------------------------------------
+Paciente [3] - Siclano
+
+Fonoaudiologia:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$516.0
+ Horas de Sessão: 6h
+ Total: R$3096.0
+ Reembolso: R$321.0
+ Horas para Nota Fiscal: 10h
+
+Terapia ABA:
+ Valor do Pacote: R$3829.0
+ Reembolso: R$156.0
+ Horas para Nota Fiscal: 25h
+-------------------------------------------
+Paciente [4] - Guilherme
+
+Fonoaudiologia:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$1251351.0
+ Horas de Sessão: 31h
+ Total: R$3.8791881E7
+ Reembolso: R$16146.0
+ Horas para Nota Fiscal: 2403h
+
+Terapia ABA:
+ Valor do Pacote: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+-------------------------------------------
+Paciente [5] - Rogerio
+
+Fonoaudiologia:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia ABA:
+ Valor do Pacote: R$4000.0
+ Reembolso: R$250.0
+ Horas para Nota Fiscal: 16h
+-------------------------------------------
+Paciente [6] - Lucas
+
+Fonoaudiologia:
+ Valor da Sessão: R$400.0
+ Horas de Sessão: 8h
+ Total: R$3200.0
+ Reembolso: R$150.0
+ Horas para Nota Fiscal: 22h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia ABA:
+ Valor do Pacote: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+-------------------------------------------
