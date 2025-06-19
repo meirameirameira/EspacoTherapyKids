@@ -5,6 +5,8 @@ public class Sessao {
     private int horas;
     private double reembolsoInformado;
 
+    public Sessao() { }
+
     public Sessao(double preco, int horas, double reembolsoInformado) {
         this.preco = preco;
         this.horas = horas;

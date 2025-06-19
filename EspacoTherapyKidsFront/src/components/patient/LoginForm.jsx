@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { login } from '../utils/api';
-import { Title, Form, Label, Input, Button } from './styled';
+import { login } from '../../utils/api';
+import { Title, Form, Label, Input, Button } from '../styled';
 
 const schema = Yup.object({ username: Yup.string().required(), password: Yup.string().required() });
 export default function LoginForm({ onSuccess }) {

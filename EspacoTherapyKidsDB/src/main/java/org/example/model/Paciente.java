@@ -7,6 +7,8 @@ public class Paciente {
     private Sessao terapiaOcupacional;
     private Sessao aba;
 
+    public Paciente() { }
+
     public Paciente(String nome, Sessao fono, Sessao terapiaOcupacional, Sessao aba) {
         this.nome = nome;
         this.fono = fono;

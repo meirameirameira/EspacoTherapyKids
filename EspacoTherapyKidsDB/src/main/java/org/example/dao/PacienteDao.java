@@ -4,11 +4,13 @@ import org.example.factory.ConnectionFactory;
 import org.example.exception.EntidadeNaoEncontradaException;
 import org.example.model.Paciente;
 import org.example.model.Sessao;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class PacienteDao {
     private final Connection conexao;
     public PacienteDao() throws SQLException {
