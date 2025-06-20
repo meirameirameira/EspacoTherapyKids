@@ -1,0 +1,84 @@
+Paciente [23] - Teste 1
+
+Fonoaudiologia:
+ Valor da Sessão: R$444.0
+ Horas de Sessão: 4h
+ Total: R$1776.0
+ Reembolso: R$44.0
+ Horas para Nota Fiscal: 41h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia ABA:
+ Valor do Pacote: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+-------------------------------------------
+Paciente [24] - Teste 2
+
+Fonoaudiologia:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$222.0
+ Horas de Sessão: 2h
+ Total: R$444.0
+ Reembolso: R$22.0
+ Horas para Nota Fiscal: 21h
+
+Terapia ABA:
+ Valor do Pacote: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+-------------------------------------------
+Paciente [25] - Teste 3
+
+Fonoaudiologia:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$0.0
+ Horas de Sessão: 0h
+ Total: R$0.0
+ Reembolso: R$0.0
+ Horas para Nota Fiscal: 0h
+
+Terapia ABA:
+ Valor do Pacote: R$3333.0
+ Reembolso: R$333.0
+ Horas para Nota Fiscal: 11h
+-------------------------------------------
+Paciente [26] - Luiz Ferreira Armando Lopes
+
+Fonoaudiologia:
+ Valor da Sessão: R$111.0
+ Horas de Sessão: 11h
+ Total: R$1221.0
+ Reembolso: R$11.0
+ Horas para Nota Fiscal: 111h
+
+Terapia Ocupacional:
+ Valor da Sessão: R$222.0
+ Horas de Sessão: 2h
+ Total: R$444.0
+ Reembolso: R$22.0
+ Horas para Nota Fiscal: 21h
+
+Terapia ABA:
+ Valor do Pacote: R$2222.0
+ Reembolso: R$222.0
+ Horas para Nota Fiscal: 11h
+-------------------------------------------

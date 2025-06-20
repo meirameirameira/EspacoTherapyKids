@@ -8,7 +8,7 @@ import java.util.concurrent.*;
 
 public class PacienteView {
     private static final int TENTATIVAS = 3;
-    private static final long MENU_TIMEOUT = 10;
+    private static final long MENU_TIMEOUT = 60;
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
