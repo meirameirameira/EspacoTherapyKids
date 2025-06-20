@@ -123,7 +123,6 @@ CREATE TABLE tb_paciente (
 1.No terminal rode:
 
 ```bash
-cd frontend/
 npm install
 npm run dev
 ```
