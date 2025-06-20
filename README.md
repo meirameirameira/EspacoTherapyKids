@@ -5,24 +5,25 @@ Protótipo do sistema de gestão de pacientes do **Espaço Therapy Kids**, com b
 ## Estrutura do Repositório
 
 ```
-├── EspacoTherapyKidsBackend/ # Código Java com JDBC puro para acesso ao banco
-│ ├── src/
-│ │ └── main/
-│ │ └── java/
-│ │ └── org/
-│ │ └── example/
-│ │ ├── EspacoTherapyKidsApplication.java # Classe que inicializa o backend
-│ │ └── view/
-│ │ └── PacienteView.java # Inicia o sistema no console
-│ └── ConnectionFactory.java # Classe que define URL, usuário e senha do DB
+├─ EspacoTherapyKidsBackend/ # Código Java com JDBC puro para acesso ao banco
+│  └─ src/
+│     └─ main/
+│         └─ java/
+│             └─ org.example/
+│                 ├─ EspacoTherapyKidsApplication.java # Classe que inicializa o backend
+│                 ├─ factory/
+│                 │  └─ ConnectionFactory.java # Classe que define URL, usuário e senha do DB
+│                 └─ view/
+│                    └─ PacienteView.java # Inicia o sistema no console
 │
-├── EspacoTherapyKidsFrontend/ # Aplicação React + Vite
-│ ├── src/
-│ ├── package.json
-│ ├── vite.config.js
-│ └── .env.example
+├─ EspacoTherapyKidsFrontend/ # Aplicação React + Vite
+│  ├─ src/
+│  ├─ package.json
+│  └─ vite.config.js
 │
-└── README.md    
+├─ EspacoTherapyKidsSQL.sql
+│
+└─ README.md    
 ```
 
 ---
@@ -61,7 +62,7 @@ public class ConnectionFactory {
 
 ### Banco de Dados
 
-Use este script SQL para criar a tabela `tb_paciente` (ajuste sintaxe se mudar de SGBD):
+Use este script SQL ou o arquivo .SQL para criar a tabela `tb_paciente`:
 
 ```sql
 CREATE TABLE tb_paciente (
@@ -88,27 +89,9 @@ CREATE TABLE tb_paciente (
 
 #### Execução
 
-1. Para rodar o sistema no console, rode a classe **PacienteView** localizada em:
-```
-   └── EspacoTherapyKidsBackend
-     └── src/
-       └── main/
-         └── java/
-           └── org.example/
-             └── view/
-               └── PacienteView.java
-```
+1. Para rodar o sistema no console, rode a classe **PacienteView** localizada em: `EspacoTherapyKidsBackend/src/main/java/org.example/factory/ConnectionFactory.java`
 
-
-2. Para iniciar o backend, rode a classe em java **EspacoTherapyKidsApplication**, localizada em:
-```
-   └── EspacoTherapyKidsBackend
-     └── src/
-       └── main/
-         └── java/
-           └── org.example/
-             └── EspacoTherapyKidsApplication.java
-```
+2. Para iniciar o backend, rode a classe em java **EspacoTherapyKidsApplication**, localizada em: `EspacoTherapyKidsBackend/src/main/java/org.example/EspacoTherapyKidsApplication.java`
 
 ---
 
