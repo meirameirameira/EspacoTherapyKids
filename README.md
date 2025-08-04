@@ -28,8 +28,6 @@ Protótipo do sistema de gestão de pacientes do **Espaço Therapy Kids**, com b
 
 ---
 
-## Backend (Java + JDBC)
-
 ### Pré-requisitos
 
 - Java 17+ instalado
@@ -60,7 +58,7 @@ public class ConnectionFactory {
   - Para PostgreSQL:`jdbc:postgresql://HOST:5432/SEU_SCHEMA`
 - **Usuário/Senha**: credenciais válidas no banco
 
-### Banco de Dados
+### Tabela de Dados
 
 Use este script SQL ou o arquivo .SQL para criar a tabela `tb_paciente`:
 
@@ -84,8 +82,9 @@ CREATE TABLE tb_paciente (
   PRIMARY KEY (cd_paciente)
 );
 ```
+---
 
-### Backend (Java) - IntelliJ
+## Backend (Java) - IntelliJ
 
 #### Execução
 
@@ -101,7 +100,7 @@ CREATE TABLE tb_paciente (
 
 1. Ajuste a URL caso o backend rode em outro host ou porta.
 
-### Execução
+#### Execução
 
 1.No terminal rode:
 
