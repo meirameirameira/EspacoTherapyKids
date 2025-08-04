@@ -2,38 +2,98 @@ package org.example.model;
 
 public class Paciente {
     private long codigo;
+    private Long nrResponsavel;
+    private String nmResponsavel;
     private String nome;
     private Sessao fono;
     private Sessao terapiaOcupacional;
     private Sessao aba;
 
+    // Construtor padrão
     public Paciente() { }
 
-    public Paciente(String nome, Sessao fono, Sessao terapiaOcupacional, Sessao aba) {
+    public Paciente(
+            Long nrResponsavel,
+            String nmResponsavel,
+            String nome,
+            Sessao fono,
+            Sessao terapiaOcupacional,
+            Sessao aba
+    ) {
+        this(0L, nrResponsavel, nmResponsavel, nome, fono, terapiaOcupacional, aba);
+    }
+
+    public Paciente(
+            long codigo,
+            Long nrResponsavel,
+            String nmResponsavel,
+            String nome,
+            Sessao fono,
+            Sessao terapiaOcupacional,
+            Sessao aba
+    ) {
+        this.codigo = codigo;
+        this.nrResponsavel = nrResponsavel;
+        this.nmResponsavel = nmResponsavel;
         this.nome = nome;
         this.fono = fono;
         this.terapiaOcupacional = terapiaOcupacional;
         this.aba = aba;
     }
 
-    public Paciente(long codigo, String nome, Sessao fono, Sessao terapiaOcupacional, Sessao aba) {
-        this(nome, fono, terapiaOcupacional, aba);
+    // Getters e Setters
+    public long getCodigo() {
+        return codigo;
+    }
+    public void setCodigo(long codigo) {
         this.codigo = codigo;
     }
 
-    public long getCodigo() { return codigo; }
-    public void setCodigo(long codigo) { this.codigo = codigo; }
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-    public Sessao getFono() { return fono; }
-    public void setFono(Sessao fono) { this.fono = fono; }
-    public Sessao getTerapiaOcupacional() { return terapiaOcupacional; }
-    public void setTerapiaOcupacional(Sessao terapiaOcupacional) { this.terapiaOcupacional = terapiaOcupacional; }
-    public Sessao getAba() { return aba; }
-    public void setAba(Sessao aba) { this.aba = aba; }
+    public Long getNrResponsavel() {
+        return nrResponsavel;
+    }
+    public void setNrResponsavel(Long nrResponsavel) {
+        this.nrResponsavel = nrResponsavel;
+    }
+
+    public String getNmResponsavel() {
+        return nmResponsavel;
+    }
+    public void setNmResponsavel(String nmResponsavel) {
+        this.nmResponsavel = nmResponsavel;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Sessao getFono() {
+        return fono;
+    }
+    public void setFono(Sessao fono) {
+        this.fono = fono;
+    }
+
+    public Sessao getTerapiaOcupacional() {
+        return terapiaOcupacional;
+    }
+    public void setTerapiaOcupacional(Sessao terapiaOcupacional) {
+        this.terapiaOcupacional = terapiaOcupacional;
+    }
+
+    public Sessao getAba() {
+        return aba;
+    }
+    public void setAba(Sessao aba) {
+        this.aba = aba;
+    }
 
     public void exibirInformacoes() {
         System.out.println("Paciente [" + codigo + "] - " + nome);
+        System.out.println("Responsável: " + nrResponsavel + " - " + nmResponsavel);
         imprimirSessao("Fonoaudiologia", fono);
         imprimirSessao("Terapia Ocupacional", terapiaOcupacional);
         imprimirSessao("ABA", aba);

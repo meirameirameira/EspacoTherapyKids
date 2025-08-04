@@ -17,11 +17,13 @@ public class PacienteDao {
         this.conexao = ConnectionFactory.getConnection();
     }
     public void cadastrar(Paciente p) throws SQLException {
-        String sql = "INSERT INTO tb_paciente (nm_paciente, preco_fono, horas_fono, total_fono, reembolso_fono, nf_fono, " +
+        String sql = "INSERT INTO tb_paciente (nr_responsavel, nm_responsavel, nm_paciente, preco_fono, horas_fono, total_fono, reembolso_fono, nf_fono, " +
                 "preco_to, horas_to, total_to, reembolso_to, nf_to, preco_aba, reembolso_aba, nf_aba) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stm = conexao.prepareStatement(sql, new String[]{"CD_PACIENTE"});
         int i = 1;
+        stm.setLong(i++, p.getNrResponsavel());
+        stm.setString(i++, p.getNmResponsavel());
         stm.setString(i++, p.getNome());
         // Fono
         stm.setDouble(i++, p.getFono().getPreco());
@@ -43,10 +45,12 @@ public class PacienteDao {
         ResultSet rs = stm.getGeneratedKeys(); if (rs.next()) p.setCodigo(rs.getLong(1));
     }
     public void atualizar(Paciente p) throws SQLException, EntidadeNaoEncontradaException {
-        String sql = "UPDATE tb_paciente SET nm_paciente=?, preco_fono=?, horas_fono=?, total_fono=?, reembolso_fono=?, nf_fono=?, " +
+        String sql = "UPDATE tb_paciente SET nr_responsavel=?, nm_responsavel=?, nm_paciente=?, preco_fono=?, horas_fono=?, total_fono=?, reembolso_fono=?, nf_fono=?, " +
                 "preco_to=?, horas_to=?, total_to=?, reembolso_to=?, nf_to=?, preco_aba=?, reembolso_aba=?, nf_aba=? WHERE cd_paciente=?";
         PreparedStatement stm = conexao.prepareStatement(sql);
         int i = 1;
+        stm.setLong(i++, p.getNrResponsavel());
+        stm.setString(i++, p.getNmResponsavel());
         stm.setString(i++, p.getNome());
         // Fono
         stm.setDouble(i++, p.getFono().getPreco());
@@ -75,7 +79,13 @@ public class PacienteDao {
             Sessao f = new Sessao(rs.getDouble("preco_fono"), rs.getInt("horas_fono"), rs.getDouble("reembolso_fono"));
             Sessao t = new Sessao(rs.getDouble("preco_to"),   rs.getInt("horas_to"),   rs.getDouble("reembolso_to"));
             Sessao a = new Sessao(rs.getDouble("preco_aba"), rs.getDouble("reembolso_aba"));
-            lista.add(new Paciente(rs.getLong("cd_paciente"), rs.getString("nm_paciente"), f, t, a));
+            lista.add(new Paciente(
+                    rs.getLong("cd_paciente"),
+                    rs.getLong("nr_responsavel"),
+                    rs.getString("nm_responsavel"),
+                    rs.getString("nm_paciente"),
+                    f, t, a
+            ));
         }
         return lista;
     }
@@ -84,7 +94,7 @@ public class PacienteDao {
         PreparedStatement stm=conexao.prepareStatement(sql);
         stm.setLong(1,id); ResultSet rs=stm.executeQuery();
         if(rs.next()) return new Paciente(
-                rs.getLong("cd_paciente"), rs.getString("nm_paciente"),
+                rs.getLong("cd_paciente"), rs.getLong("nr_responsavel"), rs.getString("nm_responsavel"), rs.getString("nm_paciente"),
                 new Sessao(rs.getDouble("preco_fono"), rs.getInt("horas_fono"), rs.getDouble("reembolso_fono")),
                 new Sessao(rs.getDouble("preco_to"),   rs.getInt("horas_to"),   rs.getDouble("reembolso_to")),
                 new Sessao(rs.getDouble("preco_aba"), rs.getDouble("reembolso_aba"))

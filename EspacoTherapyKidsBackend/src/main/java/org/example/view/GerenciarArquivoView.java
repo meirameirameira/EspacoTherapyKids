@@ -4,6 +4,7 @@ import org.example.dao.PacienteDao;
 import org.example.factory.ConnectionFactory;
 import org.example.model.Paciente;
 import org.example.model.Sessao;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.sql.Connection;
@@ -18,7 +19,7 @@ public class GerenciarArquivoView {
     }
 
     private static void exportarDados() {
-        try (Connection conexao = ConnectionFactory.getConnection();) {
+        try (Connection conexao = ConnectionFactory.getConnection()) {
             PacienteDao dao = new PacienteDao();
             List<Paciente> pacientes = dao.listar();
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME))) {
@@ -34,35 +35,42 @@ public class GerenciarArquivoView {
 
     private static String formatarLinha(Paciente p) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Paciente [").append(p.getCodigo()).append("] - ").append(p.getNome());
+
+        // Cabeçalho do paciente
+        sb.append("Paciente [")
+                .append(p.getCodigo())
+                .append("] - ")
+                .append(p.getNome());
+
+        // Dados do responsável
+        sb.append("\nResponsável: [")
+                .append(p.getNrResponsavel())
+                .append("] - ")
+                .append(p.getNmResponsavel());
+
         Sessao fono = p.getFono();
-        Sessao to = p.getTerapiaOcupacional();
-        Sessao aba = p.getAba();
+        Sessao to   = p.getTerapiaOcupacional();
+        Sessao aba  = p.getAba();
 
-        sb.append("\n");
-
-        sb.append("\nFonoaudiologia:");
+        sb.append("\n\nFonoaudiologia:");
         sb.append("\n Valor da Sessão: R$").append(fono.getPreco());
         sb.append("\n Horas de Sessão: ").append(fono.getHoras()).append("h");
         sb.append("\n Total: R$").append(fono.calcularTotal());
         sb.append("\n Reembolso: R$").append(fono.getReembolsoInformado());
         sb.append("\n Horas para Nota Fiscal: ").append(fono.calcularNF()).append("h");
 
-        sb.append("\n");
-
-        sb.append("\nTerapia Ocupacional:");
+        sb.append("\n\nTerapia Ocupacional:");
         sb.append("\n Valor da Sessão: R$").append(to.getPreco());
         sb.append("\n Horas de Sessão: ").append(to.getHoras()).append("h");
         sb.append("\n Total: R$").append(to.calcularTotal());
         sb.append("\n Reembolso: R$").append(to.getReembolsoInformado());
         sb.append("\n Horas para Nota Fiscal: ").append(to.calcularNF()).append("h");
 
-        sb.append("\n");
-
-        sb.append("\nTerapia ABA:");
+        sb.append("\n\nTerapia ABA:");
         sb.append("\n Valor do Pacote: R$").append(aba.getPreco());
         sb.append("\n Reembolso: R$").append(aba.getReembolsoInformado());
         sb.append("\n Horas para Nota Fiscal: ").append(aba.calcularNF()).append("h");
+
         sb.append("\n-------------------------------------------");
         return sb.toString();
     }
