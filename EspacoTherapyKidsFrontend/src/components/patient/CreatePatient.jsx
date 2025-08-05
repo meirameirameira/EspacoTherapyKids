@@ -8,7 +8,6 @@ import InputField from '../common/InputField';
 import Button from '../common/Button';
 import { createPaciente } from '../../api';
 
-// Agrupa as especializações lado a lado
 const Specializations = styled.div`
   display: flex;
   gap: 20px;
@@ -29,8 +28,11 @@ const SpecSection = styled.div`
   max-width: 300px;
 `;
 
+// Validação do formulário
 const schema = Yup.object({
   nome: Yup.string().required('Obrigatório'),
+  nrResponsavel: Yup.string().required('Obrigatório'),
+  nmResponsavel: Yup.string().required('Obrigatório'),
   fonoEnabled: Yup.boolean(),
   fonoPreco: Yup.number().when('fonoEnabled', {
     is: true, then: s => s.positive().required('Obrigatório'), otherwise: s => s.notRequired()
@@ -67,6 +69,8 @@ export default function CreatePatient() {
       <Formik
         initialValues={{
           nome: '',
+          nrResponsavel: '',
+          nmResponsavel: '',
           fonoEnabled: false,
           fonoPreco: '',
           fonoHoras: '',
@@ -83,6 +87,8 @@ export default function CreatePatient() {
         onSubmit={async (vals, { resetForm }) => {
           const paciente = {
             nome: vals.nome,
+            nrResponsavel: vals.nrResponsavel,
+            nmResponsavel: vals.nmResponsavel,
             fono: vals.fonoEnabled
               ? {
                   preco: parseFloat(vals.fonoPreco),
@@ -104,15 +110,26 @@ export default function CreatePatient() {
                 }
               : { preco: 0, reembolsoInformado: 0 },
           };
-          await createPaciente(paciente);
-          alert('Paciente cadastrado com sucesso!');
-          resetForm();
+          try {
+            await createPaciente(paciente);
+            alert('Paciente cadastrado com sucesso!');
+            resetForm();
+          } catch (error) {
+            console.error('Erro ao criar paciente', error);
+            alert('Falha ao cadastrar paciente: ' + error.message);
+          }
         }}
       >
         {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
           <FormWrapper onSubmit={handleSubmit}>
-            {/* Campo Nome */}
+            {/* Campo Nome e Responsável */}
             <InputField name="nome" label="Nome" />
+            <ErrorMessage name="nome" component="div" />
+
+            <InputField name="nrResponsavel" label="Número do Responsável" type="text" />
+            <ErrorMessage name="nrResponsavel" component="div" />
+            <InputField name="nmResponsavel" label="Nome do Responsável" />
+            <ErrorMessage name="nmResponsavel" component="div" />
 
             {/* Especializações lado a lado */}
             <Specializations>
@@ -123,32 +140,15 @@ export default function CreatePatient() {
                     type="checkbox"
                     name="fonoEnabled"
                     checked={values.fonoEnabled}
-                    onChange={() =>
-                      setFieldValue('fonoEnabled', !values.fonoEnabled)
-                    }
+                    onChange={() => setFieldValue('fonoEnabled', !values.fonoEnabled)}
                   />{' '}
                   Fonoaudiologia
                 </label>
-                <InputField
-                  name="fonoPreco"
-                  label="Valor sessão (R$)"
-                  type="number"
-                  disabled={!values.fonoEnabled}
-                />
+                <InputField name="fonoPreco" label="Valor sessão (R$)" type="number" disabled={!values.fonoEnabled} />
                 <ErrorMessage name="fonoPreco" component="div" />
-                <InputField
-                  name="fonoHoras"
-                  label="Horas de sessão"
-                  type="number"
-                  disabled={!values.fonoEnabled}
-                />
+                <InputField name="fonoHoras" label="Horas de sessão" type="number" disabled={!values.fonoEnabled} />
                 <ErrorMessage name="fonoHoras" component="div" />
-                <InputField
-                  name="fonoReembolso"
-                  label="Reembolso informado"
-                  type="number"
-                  disabled={!values.fonoEnabled}
-                />
+                <InputField name="fonoReembolso" label="Reembolso informado" type="number" disabled={!values.fonoEnabled} />
                 <ErrorMessage name="fonoReembolso" component="div" />
               </SpecSection>
 
@@ -159,32 +159,15 @@ export default function CreatePatient() {
                     type="checkbox"
                     name="toEnabled"
                     checked={values.toEnabled}
-                    onChange={() =>
-                      setFieldValue('toEnabled', !values.toEnabled)
-                    }
+                    onChange={() => setFieldValue('toEnabled', !values.toEnabled)}
                   />{' '}
                   Terapia Ocupacional
                 </label>
-                <InputField
-                  name="toPreco"
-                  label="Valor sessão (R$)"
-                  type="number"
-                  disabled={!values.toEnabled}
-                />
+                <InputField name="toPreco" label="Valor sessão (R$)" type="number" disabled={!values.toEnabled} />
                 <ErrorMessage name="toPreco" component="div" />
-                <InputField
-                  name="toHoras"
-                  label="Horas de sessão"
-                  type="number"
-                  disabled={!values.toEnabled}
-                />
+                <InputField name="toHoras" label="Horas de sessão" type="number" disabled={!values.toEnabled} />
                 <ErrorMessage name="toHoras" component="div" />
-                <InputField
-                  name="toReembolso"
-                  label="Reembolso informado"
-                  type="number"
-                  disabled={!values.toEnabled}
-                />
+                <InputField name="toReembolso" label="Reembolso informado" type="number" disabled={!values.toEnabled} />
                 <ErrorMessage name="toReembolso" component="div" />
               </SpecSection>
 
@@ -195,25 +178,13 @@ export default function CreatePatient() {
                     type="checkbox"
                     name="abaEnabled"
                     checked={values.abaEnabled}
-                    onChange={() =>
-                      setFieldValue('abaEnabled', !values.abaEnabled)
-                    }
+                    onChange={() => setFieldValue('abaEnabled', !values.abaEnabled)}
                   />{' '}
                   Terapia ABA
                 </label>
-                <InputField
-                  name="abaPreco"
-                  label="Valor do pacote (R$)"
-                  type="number"
-                  disabled={!values.abaEnabled}
-                />
+                <InputField name="abaPreco" label="Valor do pacote (R$)" type="number" disabled={!values.abaEnabled} />
                 <ErrorMessage name="abaPreco" component="div" />
-                <InputField
-                  name="abaReembolso"
-                  label="Reembolso informado"
-                  type="number"
-                  disabled={!values.abaEnabled}
-                />
+                <InputField name="abaReembolso" label="Reembolso informado" type="number" disabled={!values.abaEnabled} />
                 <ErrorMessage name="abaReembolso" component="div" />
               </SpecSection>
             </Specializations>

@@ -26,6 +26,8 @@ const SpecSection = styled.div`
 
 const schema = Yup.object({
   nome: Yup.string().required('Obrigatório'),
+  nrResponsavel: Yup.string().required('Obrigatório'),
+  nmResponsavel: Yup.string().required('Obrigatório'),
   fonoEnabled: Yup.boolean(),
   fonoPreco: Yup.number().when('fonoEnabled', { is: true, then: s => s.positive().required('Obrigatório') }),
   fonoHoras: Yup.number().when('fonoEnabled', { is: true, then: s => s.integer().positive().required('Obrigatório') }),
@@ -71,6 +73,8 @@ export default function UpdatePatient() {
         <Formik
           initialValues={{
             nome: paciente.nome,
+            nrResponsavel: paciente.nrResponsavel,
+            nmResponsavel: paciente.nmResponsavel,
             fonoEnabled: paciente.fono.horas > 0 || paciente.fono.preco > 0,
             fonoPreco: paciente.fono.preco,
             fonoHoras: paciente.fono.horas,
@@ -87,6 +91,8 @@ export default function UpdatePatient() {
           onSubmit={async vals => {
             await updatePaciente(paciente.codigo, {
               nome: vals.nome,
+              nrResponsavel: vals.nrResponsavel,
+              nmResponsavel: vals.nmResponsavel,
               fono: vals.fonoEnabled
                 ? {
                     preco: parseFloat(vals.fonoPreco),
@@ -114,6 +120,8 @@ export default function UpdatePatient() {
           {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
             <FormWrapper onSubmit={handleSubmit}>
               <InputField name="nome" label="Nome" />
+              <InputField name="nrResponsavel" label="Número do Responsável" type="text"/>
+              <InputField name="nmResponsavel" label="Nome do Responsável" type="text"/>
 
               <Specializations>
                 <SpecSection>

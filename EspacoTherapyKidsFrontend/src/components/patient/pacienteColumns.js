@@ -1,8 +1,10 @@
 // src/components/Patient/pacienteColumns.js
 export const pacienteColumns = [
   // campos simples
-  { key: 'codigo', label: 'Código' },
-  { key: 'nome',   label: 'Nome' },
+  { key: 'codigo', label: 'Código do Paciente' },
+  { key: 'nome',   label: 'Nome do Paciente' },
+  { key: 'nrResponsavel', label: 'Celular do Responsável' },
+  { key: 'nmResponsavel', label: 'Nome do Responsável' },
 
   // Fono
   {
