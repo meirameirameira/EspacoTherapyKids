@@ -1,4 +1,3 @@
-// src/components/Patient/CreatePatient.jsx
 import React from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -15,7 +14,6 @@ const Specializations = styled.div`
   justify-content: center;
 `;
 
-// Cada caixa de especialização com largura fixa de 300px
 const SpecSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,7 +26,6 @@ const SpecSection = styled.div`
   max-width: 300px;
 `;
 
-// Validação do formulário
 const schema = Yup.object({
   nome: Yup.string().required('Obrigatório'),
   nrResponsavel: Yup.string().required('Obrigatório'),
@@ -122,7 +119,6 @@ export default function CreatePatient() {
       >
         {({ values, handleSubmit, isSubmitting, setFieldValue }) => (
           <FormWrapper onSubmit={handleSubmit}>
-            {/* Campo Nome e Responsável */}
             <InputField name="nome" label="Nome" />
             <ErrorMessage name="nome" component="div" />
 
@@ -131,9 +127,7 @@ export default function CreatePatient() {
             <InputField name="nmResponsavel" label="Nome do Responsável" />
             <ErrorMessage name="nmResponsavel" component="div" />
 
-            {/* Especializações lado a lado */}
             <Specializations>
-              {/* Fonoaudiologia */}
               <SpecSection>
                 <label>
                   <Field
@@ -152,7 +146,6 @@ export default function CreatePatient() {
                 <ErrorMessage name="fonoReembolso" component="div" />
               </SpecSection>
 
-              {/* Terapia Ocupacional */}
               <SpecSection>
                 <label>
                   <Field
@@ -171,7 +164,6 @@ export default function CreatePatient() {
                 <ErrorMessage name="toReembolso" component="div" />
               </SpecSection>
 
-              {/* Pacote ABA */}
               <SpecSection>
                 <label>
                   <Field

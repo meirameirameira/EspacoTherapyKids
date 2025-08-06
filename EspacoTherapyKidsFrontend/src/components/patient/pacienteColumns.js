@@ -1,12 +1,10 @@
-// src/components/Patient/pacienteColumns.js
 export const pacienteColumns = [
-  // campos simples
+
   { key: 'codigo', label: 'Código do Paciente' },
   { key: 'nome',   label: 'Nome do Paciente' },
   { key: 'nrResponsavel', label: 'Celular do Responsável' },
   { key: 'nmResponsavel', label: 'Nome do Responsável' },
 
-  // Fono
   {
     key: 'fonoValor',
     label: 'FONO Valor',
@@ -41,7 +39,6 @@ export const pacienteColumns = [
     }
   },
 
-  // Terapia Ocupacional
   {
     key: 'toValor',
     label: 'TO Valor',
@@ -76,7 +73,6 @@ export const pacienteColumns = [
     }
   },
 
-  // ABA
   {
     key: 'abaValor',
     label: 'ABA Pacote',

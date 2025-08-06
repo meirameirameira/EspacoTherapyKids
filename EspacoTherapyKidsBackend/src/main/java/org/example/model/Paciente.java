@@ -9,7 +9,6 @@ public class Paciente {
     private Sessao terapiaOcupacional;
     private Sessao aba;
 
-    // Construtor padrão
     public Paciente() { }
 
     public Paciente(
@@ -41,7 +40,6 @@ public class Paciente {
         this.aba = aba;
     }
 
-    // Getters e Setters
     public long getCodigo() {
         return codigo;
     }

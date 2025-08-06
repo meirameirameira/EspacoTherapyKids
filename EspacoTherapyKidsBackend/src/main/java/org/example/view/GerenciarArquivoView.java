@@ -36,13 +36,11 @@ public class GerenciarArquivoView {
     private static String formatarLinha(Paciente p) {
         StringBuilder sb = new StringBuilder();
 
-        // Cabeçalho do paciente
         sb.append("Paciente [")
                 .append(p.getCodigo())
                 .append("] - ")
                 .append(p.getNome());
 
-        // Dados do responsável
         sb.append("\nResponsável: [")
                 .append(p.getNrResponsavel())
                 .append("] - ")

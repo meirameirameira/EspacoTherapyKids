@@ -1,4 +1,3 @@
-// src/components/common/SearchById.jsx
 import React from 'react';
 import FormWrapper from './FormWrapper';
 import { Label, Input } from './styled';

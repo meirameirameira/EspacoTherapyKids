@@ -1,4 +1,3 @@
-// utiliza useField do Formik
 import React from 'react';
 import { useField } from 'formik';
 import { Label, Input, ErrorText } from '../../styles/formStyles';

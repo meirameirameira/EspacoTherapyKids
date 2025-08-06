@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import LoginForm from './components/patient/LoginForm';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import CreatePatient from './components/Patient/CreatePatient';
-import ListPatients from './components/Patient/ListPatients';
-import SearchPatient from './components/Patient/SearchPatient';
-import UpdatePatient from './components/Patient/UpdatePatient';
-import DeletePatient from './components/Patient/DeletePatient';
+import CreatePatient from './components/patient/CreatePatient';
+import ListPatients from './components/patient/ListPatients';
+import SearchPatient from './components/patient/SearchPatient';
+import UpdatePatient from './components/patient/UpdatePatient';
+import DeletePatient from './components/patient/DeletePatient';
 
 export default function App() {
+
+  
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  function handleLoginSuccess() {
+    setLoggedIn(true);
+  }
+
+  if (!loggedIn) {
+    return <LoginForm onSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <>
       <Navbar />

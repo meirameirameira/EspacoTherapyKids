@@ -1,18 +1,39 @@
-// src/components/common/styled.js
 import styled from 'styled-components';
 
+export const Title = styled.h1`
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+`;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 300px;
+  margin: 0 auto;
+`;
+
 export const Label = styled.label`
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
+  font-weight: bold;
 `;
 
 export const Input = styled.input`
-  width: 100%;
-  padding: 8px 12px;
-  margin-bottom: 16px;
-  font-size: 1rem;
+  padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box;
+`;
+
+export const Button = styled.button`
+  padding: 0.75rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
 `;

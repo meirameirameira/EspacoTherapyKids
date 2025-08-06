@@ -1,4 +1,3 @@
-// src/components/Patient/PacienteTable.jsx
 import React from 'react';
 import { TableContainer, Table, Th, Td } from '../common/Table';
 import { pacienteColumns } from './pacienteColumns';
@@ -23,11 +22,9 @@ export default function PacienteTable({ pacientes }) {
           {rows.map((p, rowIdx) => (
             <tr key={rowIdx}>
               {pacienteColumns.map(col => {
-                // se for linha de exemplo, p === null
-                if (!p) {
+                 if (!p) {
                   return <Td key={col.key}>—</Td>;
                 }
-                // calcula via computed de forma segura
                 const raw = col.computed ? col.computed(p) : p[col.key];
                 return (
                   <Td key={col.key}>
