@@ -1,48 +1,54 @@
 package org.example.controller;
 
-import jakarta.servlet.http.HttpSession;
+import org.example.auth.TokenService;
 import org.example.dto.LoginRequest;
-import org.example.factory.ConnectionFactory;
-import org.springframework.http.*;
+import org.example.web.ApiError;
+import org.springframework.beans.factory.annotation.Value;   // <<< ADICIONE
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.time.OffsetDateTime;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173")  // ajuste à porta do seu front
+@RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
-    private static final int MAX_ATTEMPTS = 3;
-    private static final String ATTR_ATTEMPTS = "loginAttempts";
-    private static final String ATTR_AUTH     = "authenticated";
+    private final TokenService tokens;
+
+    // >>> CREDENCIAIS VINDAS DO application.properties (com valores padrão se não definir)
+    @Value("${app.auth.username:admin}")
+    private String confUser;
+
+    @Value("${app.auth.password:123}")
+    private String confPass;
+
+    public AuthController(TokenService tokens) {
+        this.tokens = tokens;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(
-            @RequestBody LoginRequest req,
-            HttpSession session
-    ) {
-        Integer attempts = (Integer) session.getAttribute(ATTR_ATTEMPTS);
-        if (attempts == null) attempts = 0;
-        if (attempts >= MAX_ATTEMPTS) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Número máximo de tentativas excedido");
+    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
+        String user = req != null ? req.getUsername() : null;
+        String pass = req != null ? req.getPassword() : null;
+
+        if (!StringUtils.hasText(user) || !StringUtils.hasText(pass)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiError(OffsetDateTime.now(), "/api/auth/login", 400, "Bad Request",
+                            "CREDENCIAIS_INVALIDAS", "Usuário e senha são obrigatórios."));
         }
 
-        try (Connection conn = ConnectionFactory.getConnection(
-           req.getUsername(),
-           req.getPassword()
-               )) {
-            session.removeAttribute(ATTR_ATTEMPTS);
-            session.setAttribute(ATTR_AUTH, true);
-            return ResponseEntity.ok("Login bem-sucedido");
-        } catch (SQLException ex) {
-            attempts++;
-            session.setAttribute(ATTR_ATTEMPTS, attempts);
-            int rest = MAX_ATTEMPTS - attempts;
+        // >>> COMPARA COM O QUE ESTÁ NO application.properties
+        if (!confUser.equals(user) || !confPass.equals(pass)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Credenciais inválidas. Restam: " + rest);
+                    .body(new ApiError(OffsetDateTime.now(), "/api/auth/login", 401, "Unauthorized",
+                            "NAO_AUTORIZADO", "Usuário ou senha inválidos."));
         }
+
+        String token = tokens.issueToken(user);
+        return ResponseEntity.ok(Map.of("tokenType", "Bearer", "accessToken", token));
     }
 }

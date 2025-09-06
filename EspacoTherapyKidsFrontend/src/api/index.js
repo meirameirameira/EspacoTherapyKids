@@ -1,74 +1,46 @@
-const BASE = '/api/pacientes';
+// src/index.js
+const BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
 
-/**
- * @param {{username: string, password: string}} creds
- * @returns {Promise<string>}
- */
+function authHeader() {
+  const t = localStorage.getItem('token');
+  return t ? { Authorization: `Bearer ${t}` } : {};
+}
+
+async function http(path, { method = 'GET', body, headers } = {}) {
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', ...authHeader(), ...(headers || {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const ct = res.headers.get('content-type') || '';
+  const isJson = ct.includes('application/json');
+  const data = isJson ? await res.json().catch(() => null) : null;
+  if (!res.ok) {
+    const err = new Error((data && data.message) || `HTTP ${res.status}`);
+    err.status = res.status; err.body = data; throw err;
+  }
+  return data;
+}
+
+/** AUTH */
 export async function login({ username, password }) {
-
-  const res = await fetch('/api/login', {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-  console.log('[API] status', res.status);
-
-  const text = await res.text();
-  console.log('[API] body:', text);
-
-  if (!res.ok) {
-    throw new Error(text || 'Credenciais inválidas');
-  }
-  return text;
+  const data = await http('/auth/login', { method: 'POST', body: { username, password } });
+  localStorage.setItem('token', data.accessToken);
+  return data.accessToken;
 }
+export function logout() { localStorage.removeItem('token'); }
 
-export async function fetchPacientes() {
-  const res = await fetch(BASE, {
-    credentials: 'include'
-  });
-  if (!res.ok) throw new Error('Erro ao buscar pacientes');
-  return res.json();
+/** PACIENTES */
+export async function fetchPacientes({ nome, nmResponsavel, page = 0, size = 10, sortBy = 'codigo', sortDir = 'asc' } = {}) {
+  const qs = new URLSearchParams();
+  if (nome) qs.set('nome', nome);
+  if (nmResponsavel) qs.set('nmResponsavel', nmResponsavel);
+  qs.set('page', page); qs.set('size', size);
+  qs.set('sortBy', sortBy); qs.set('sortDir', sortDir);
+  const pageResp = await http(`/pacientes?${qs.toString()}`);
+  return pageResp?.content ?? pageResp ?? [];
 }
-
-export async function fetchPacienteById(id) {
-  const res = await fetch(`${BASE}/${id}`, {
-    credentials: 'include'
-  });
-  if (!res.ok) throw new Error('Paciente não encontrado');
-  return res.json();
-}
-
-export async function createPaciente(data) {
-  const res = await fetch(BASE, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error('Erro ao criar paciente');
-  return res.json();
-}
-
-export async function updatePaciente(id, data) {
-  const res = await fetch(`${BASE}/${id}`, {
-    method: 'PUT',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error('Erro ao atualizar paciente');
-  return res.json();
-}
-
-export async function deletePaciente(id) {
-  const res = await fetch(`${BASE}/${id}`, {
-    method: 'DELETE',
-    credentials: 'include'
-  });
-  if (!res.ok) {
-    const texto = await res.text();
-    throw new Error(texto || 'Erro ao remover paciente');
-  }
-  return true;
-}
+export const fetchPacienteById  = (id)      => http(`/pacientes/${id}`);
+export const createPaciente     = (payload) => http(`/pacientes`, { method: 'POST', body: payload });
+export const updatePaciente     = (id, body)=> http(`/pacientes/${id}`, { method: 'PUT', body });
+export const deletePaciente     = (id)      => http(`/pacientes/${id}`, { method: 'DELETE' });
