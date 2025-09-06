@@ -1,31 +1,33 @@
 package org.example.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public class SessaoDTO {
-    @NotNull @Positive(message = "preco deve ser > 0")
-    private Double preco;
 
-    @NotNull @Min(value = 1, message = "horas deve ser >= 1")
-    private Integer horas;
+    @DecimalMin(value = "0.0", inclusive = true, message = "preco deve ser >= 0")
+    private double preco;
 
-    @NotNull @Positive(message = "reembolsoInformado deve ser > 0")
-    private Double reembolsoInformado;
+    @Min(value = 0, message = "horas deve ser >= 0")
+    private int horas;
+
+    @DecimalMin(value = "0.0", inclusive = true, message = "reembolsoInformado deve ser >= 0")
+    private double reembolsoInformado;
 
     public SessaoDTO() { }
 
-    public SessaoDTO(Double preco, Integer horas, Double reembolsoInformado) {
+    public SessaoDTO(double preco, int horas, double reembolsoInformado) {
         this.preco = preco;
         this.horas = horas;
         this.reembolsoInformado = reembolsoInformado;
     }
 
-    public Double getPreco() { return preco; }
-    public void setPreco(Double preco) { this.preco = preco; }
-    public Integer getHoras() { return horas; }
-    public void setHoras(Integer horas) { this.horas = horas; }
-    public Double getReembolsoInformado() { return reembolsoInformado; }
-    public void setReembolsoInformado(Double reembolsoInformado) { this.reembolsoInformado = reembolsoInformado; }
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
+
+    public int getHoras() { return horas; }
+    public void setHoras(int horas) { this.horas = horas; }
+
+    public double getReembolsoInformado() { return reembolsoInformado; }
+    public void setReembolsoInformado(double reembolsoInformado) { this.reembolsoInformado = reembolsoInformado; }
 }

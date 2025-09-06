@@ -82,31 +82,42 @@ export default function CreatePatient() {
         }}
         validationSchema={schema}
         onSubmit={async (vals, { resetForm }) => {
-          const paciente = {
-            nome: vals.nome,
-            nrResponsavel: vals.nrResponsavel,
-            nmResponsavel: vals.nmResponsavel,
-            fono: vals.fonoEnabled
-              ? {
-                  preco: parseFloat(vals.fonoPreco),
-                  horas: parseInt(vals.fonoHoras, 10),
-                  reembolsoInformado: parseFloat(vals.fonoReembolso),
-                }
-              : { preco: 0, horas: 0, reembolsoInformado: 0 },
-            terapiaOcupacional: vals.toEnabled
-              ? {
-                  preco: parseFloat(vals.toPreco),
-                  horas: parseInt(vals.toHoras, 10),
-                  reembolsoInformado: parseFloat(vals.toReembolso),
-                }
-              : { preco: 0, horas: 0, reembolsoInformado: 0 },
-            aba: vals.abaEnabled
-              ? {
-                  preco: parseFloat(vals.abaPreco),
-                  reembolsoInformado: parseFloat(vals.abaReembolso),
-                }
-              : { preco: 0, reembolsoInformado: 0 },
-          };
+         const toNum = (v) => (v === '' || v === null || v === undefined ? undefined : Number(v));
+
+         const paciente = {
+           nome: vals.nome?.trim(),
+           nmResponsavel: vals.nmResponsavel?.trim(),
+           // garanta number (não string) para o backend
+           nrResponsavel: Number(vals.nrResponsavel),
+
+           // Fono: se desligado, mande valores neutros (sem quebrar validações/DAO)
+           fono: vals.fonoEnabled
+             ? {
+                 preco: toNum(vals.fonoPreco),
+                 horas: Math.max(1, Number(vals.fonoHoras)),           // inteiro >= 1
+                 reembolsoInformado: toNum(vals.fonoReembolso),
+               }
+             : { preco: 0, horas: 0, reembolsoInformado: 1 },         // NUNCA 0 aqui
+
+           // TO: mesma ideia
+           terapiaOcupacional: vals.toEnabled
+             ? {
+                 preco: toNum(vals.toPreco),
+                 horas: Math.max(1, Number(vals.toHoras)),
+                 reembolsoInformado: toNum(vals.toReembolso),
+               }
+             : { preco: 0, horas: 0, reembolsoInformado: 1 },
+
+           // ABA: no teu DAO, NF = ceil(preco / reembolso). Evite reembolso=0.
+           // Também incluí 'horas' com 1 para compatibilidade de DTO, se existir.
+           aba: vals.abaEnabled
+             ? {
+                 preco: toNum(vals.abaPreco),
+                 horas: 1,
+                 reembolsoInformado: toNum(vals.abaReembolso),
+               }
+             : { preco: 0, horas: 1, reembolsoInformado: 1 },
+         };
           try {
             await createPaciente(paciente);
             alert('Paciente cadastrado com sucesso!');

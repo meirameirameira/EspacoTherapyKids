@@ -1,22 +1,21 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.example.dao.PacienteDao;
+import org.example.dto.PageResponse;
 import org.example.dto.PacienteMapper;
 import org.example.dto.PacienteRequestDTO;
 import org.example.dto.PacienteResponseDTO;
-import org.example.dto.PageResponse;
 import org.example.exception.EntidadeNaoEncontradaException;
 import org.example.model.Paciente;
-
-import jakarta.validation.Valid;
+import org.example.model.Sessao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Comparator;
-
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
@@ -29,17 +28,31 @@ public class PacienteController {
         this.dao = dao;
     }
 
-    // ====== CADASTRAR ======
+    private void sanitize(Paciente p) {
+        if (p.getFono() == null) p.setFono(new Sessao(0, 1, 0));
+        if (p.getTerapiaOcupacional() == null) p.setTerapiaOcupacional(new Sessao(0, 1, 0));
+        if (p.getAba() == null) p.setAba(new Sessao(0, 1, 0));
+
+        if (p.getFono().getPreco() <= 0 || p.getFono().getHoras() <= 0) {
+            p.getFono().setPreco(0); p.getFono().setHoras(1); p.getFono().setReembolsoInformado(0);
+        }
+        if (p.getTerapiaOcupacional().getPreco() <= 0 || p.getTerapiaOcupacional().getHoras() <= 0) {
+            p.getTerapiaOcupacional().setPreco(0); p.getTerapiaOcupacional().setHoras(1); p.getTerapiaOcupacional().setReembolsoInformado(0);
+        }
+        if (p.getAba().getPreco() <= 0) {
+            p.getAba().setPreco(0); p.getAba().setReembolsoInformado(0);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<PacienteResponseDTO> cadastrar(@RequestBody @Valid PacienteRequestDTO dto) throws Exception {
         Paciente entity = PacienteMapper.toEntity(dto);
-        dao.cadastrar(entity); // DAO recebe Paciente e não retorna; espera-se que preencha 'codigo' no entity
-        return ResponseEntity
-                .created(URI.create("/api/pacientes/" + entity.getCodigo()))
+        sanitize(entity);
+        dao.cadastrar(entity);
+        return ResponseEntity.created(URI.create("/api/pacientes/" + entity.getCodigo()))
                 .body(PacienteMapper.toResponse(entity));
     }
 
-    // ====== LISTAR ======
     @GetMapping
     public ResponseEntity<PageResponse<PacienteResponseDTO>> listar(
             @RequestParam(required = false) String nome,
@@ -49,10 +62,8 @@ public class PacienteController {
             @RequestParam(defaultValue = "codigo") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir
     ) throws Exception {
-        // carrega tudo do DAO
         List<Paciente> lista = dao.listar();
 
-        // filtros (case-insensitive, contém)
         var stream = lista.stream();
         if (nome != null && !nome.isBlank()) {
             String q = nome.toLowerCase();
@@ -64,69 +75,46 @@ public class PacienteController {
         }
         List<Paciente> filtrada = stream.toList();
 
-        // ordenação (default: codigo asc)
-        Comparator<Paciente> cmp;
-        switch (sortBy) {
-            case "nome" -> cmp = Comparator.comparing(
-                    p -> p.getNome() == null ? "" : p.getNome(), String.CASE_INSENSITIVE_ORDER);
-            case "nmResponsavel" -> cmp = Comparator.comparing(
-                    p -> p.getNmResponsavel() == null ? "" : p.getNmResponsavel(), String.CASE_INSENSITIVE_ORDER);
-            case "nrResponsavel" -> cmp = Comparator.comparing(
-                    p -> p.getNrResponsavel() == null ? Long.MIN_VALUE : p.getNrResponsavel());
-            case "codigo" -> cmp = Comparator.comparingLong(Paciente::getCodigo);
-            default -> cmp = Comparator.comparingLong(Paciente::getCodigo); // fallback seguro
-        }
-        if ("desc".equalsIgnoreCase(sortDir)) {
-            cmp = cmp.reversed();
-        }
+        Comparator<Paciente> cmp = switch (sortBy) {
+            case "nome" -> Comparator.comparing(p -> p.getNome() == null ? "" : p.getNome(), String.CASE_INSENSITIVE_ORDER);
+            case "nmResponsavel" -> Comparator.comparing(p -> p.getNmResponsavel() == null ? "" : p.getNmResponsavel(), String.CASE_INSENSITIVE_ORDER);
+            case "nrResponsavel" -> Comparator.comparing(p -> p.getNrResponsavel() == null ? Long.MIN_VALUE : p.getNrResponsavel());
+            default -> Comparator.comparingLong(Paciente::getCodigo);
+        };
+        if ("desc".equalsIgnoreCase(sortDir)) cmp = cmp.reversed();
+
         List<Paciente> ordenada = filtrada.stream().sorted(cmp).toList();
 
-        // paginação
         int from = Math.max(0, page * size);
         int to = Math.min(ordenada.size(), from + size);
         List<Paciente> pageSlice = from >= ordenada.size() ? List.of() : ordenada.subList(from, to);
 
         var content = pageSlice.stream().map(PacienteMapper::toResponse).toList();
         PageResponse<PacienteResponseDTO> body = new PageResponse<>(content, page, size, ordenada.size());
-
         return ResponseEntity.ok(body);
     }
 
-
-
-    // ====== PESQUISAR POR ID ======
     @GetMapping("/{id}")
     public ResponseEntity<PacienteResponseDTO> pesquisar(@PathVariable long id) throws Exception {
-        // nome do seu DAO: pesquisar
-        Paciente p = dao.pesquisar(id); // ajuste se sua assinatura for diferente
-        if (p == null) {
-            throw new EntidadeNaoEncontradaException("Paciente id=" + id + " não encontrado");
-        }
+        Paciente p = dao.pesquisar(id);
         return ResponseEntity.ok(PacienteMapper.toResponse(p));
     }
 
-    // ====== ATUALIZAR ======
     @PutMapping("/{id}")
     public ResponseEntity<PacienteResponseDTO> atualizar(@PathVariable long id,
                                                          @RequestBody @Valid PacienteRequestDTO dto) throws Exception {
         Paciente existente = dao.pesquisar(id);
-        if (existente == null) {
-            throw new EntidadeNaoEncontradaException("Paciente id=" + id + " não encontrado");
-        }
         PacienteMapper.copyToEntity(dto, existente);
         existente.setCodigo(id);
-        dao.atualizar(existente); // DAO recebe Paciente e não retorna
+        sanitize(existente);
+        dao.atualizar(existente);
         return ResponseEntity.ok(PacienteMapper.toResponse(existente));
     }
 
-    // ====== REMOVER ======
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable long id) throws Exception {
-        Paciente existente = dao.pesquisar(id);
-        if (existente == null) {
-            throw new EntidadeNaoEncontradaException("Paciente id=" + id + " não encontrado");
-        }
-        dao.remover(id); // nome do seu DAO: remover
+        dao.pesquisar(id);
+        dao.remover(id);
         return ResponseEntity.noContent().build();
     }
 }

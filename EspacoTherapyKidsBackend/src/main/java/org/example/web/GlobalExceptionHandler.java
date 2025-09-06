@@ -75,4 +75,34 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(status).body(body);
     }
+
+    @ExceptionHandler(java.sql.SQLException.class)
+    public ResponseEntity<ApiError> handleSqlGeneric(java.sql.SQLException ex, HttpServletRequest req) {
+        // Ex.: ORA-01438: value larger than specified precision for column "…"
+        int vendorCode = ex.getErrorCode();     // código vendor (Oracle)
+        String sqlState = ex.getSQLState();     // pode ser null
+        String msg = ex.getMessage();           // mensagem completa do driver
+
+        String detalhe = "SQL(" + vendorCode + (sqlState != null ? ", state=" + sqlState : "") + "): " + msg;
+
+        ApiError body = new ApiError(
+                java.time.OffsetDateTime.now(),
+                req.getRequestURI(),
+                org.springframework.http.HttpStatus.BAD_REQUEST.value(),
+                org.springframework.http.HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "ERRO_SQL",
+                detalhe
+        );
+        return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(body);
+    }
+
+
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleUnreadable(
+            org.springframework.http.converter.HttpMessageNotReadableException ex,
+            jakarta.servlet.http.HttpServletRequest req) {
+        return build(req, HttpStatus.BAD_REQUEST, "JSON_INVALIDO",
+                "Corpo da requisição inválido ou tipos incorretos.");
+    }
+
 }

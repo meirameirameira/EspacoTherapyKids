@@ -48,10 +48,10 @@ public class PacienteMapper {
 
     private static SessaoDTO toSessaoDTO(Sessao s) {
         if (s == null) return null;
-        return new SessaoDTO(
-                s.getPreco(),
-                s.getHoras(),
-                s.getReembolsoInformado()
-        );
+        SessaoDTO dto = new SessaoDTO();
+        dto.setPreco(s.getPreco());
+        dto.setHoras(s.getHoras());
+        dto.setReembolsoInformado(s.getReembolsoInformado());
+        return dto;
     }
 }
