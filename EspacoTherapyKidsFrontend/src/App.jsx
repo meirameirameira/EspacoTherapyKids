@@ -7,6 +7,7 @@ import ListPatients from './components/patient/ListPatients';
 import SearchPatient from './components/patient/SearchPatient';
 import UpdatePatient from './components/patient/UpdatePatient';
 import DeletePatient from './components/patient/DeletePatient';
+import "./styles/global.css";
 
 export default function App() {
 
