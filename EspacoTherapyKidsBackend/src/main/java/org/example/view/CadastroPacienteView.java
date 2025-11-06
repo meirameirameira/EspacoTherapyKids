@@ -16,7 +16,7 @@ public class CadastroPacienteView {
 
         System.out.print("Número do responsável: ");
         Long nrResponsavel = sc.nextLong();
-        sc.nextLine(); // consome o \n
+        sc.nextLine();
         System.out.print("Nome do responsável: ");
         String nmResponsavel = sc.nextLine();
 

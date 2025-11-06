@@ -3,7 +3,7 @@ package org.example.controller;
 import org.example.auth.TokenService;
 import org.example.dto.LoginRequest;
 import org.example.web.ApiError;
-import org.springframework.beans.factory.annotation.Value;   // <<< ADICIONE
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -19,7 +19,6 @@ public class AuthController {
 
     private final TokenService tokens;
 
-    // >>> CREDENCIAIS VINDAS DO application.properties (com valores padrão se não definir)
     @Value("${app.auth.username:admin}")
     private String confUser;
 
@@ -41,7 +40,6 @@ public class AuthController {
                             "CREDENCIAIS_INVALIDAS", "Usuário e senha são obrigatórios."));
         }
 
-        // >>> COMPARA COM O QUE ESTÁ NO application.properties
         if (!confUser.equals(user) || !confPass.equals(pass)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiError(OffsetDateTime.now(), "/api/auth/login", 401, "Unauthorized",

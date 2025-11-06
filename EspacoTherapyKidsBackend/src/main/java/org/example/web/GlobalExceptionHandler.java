@@ -23,21 +23,21 @@ public class GlobalExceptionHandler {
         return build(req, HttpStatus.NOT_FOUND, "ENTIDADE_NAO_ENCONTRADA", ex.getMessage());
     }
 
-    // 409 - conflitos de integridade (FK/UK etc.) - só Java SQL
+    // 409 - conflitos de integridade
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<ApiError> handleSqlIntegrity(SQLIntegrityConstraintViolationException ex, HttpServletRequest req) {
         return build(req, HttpStatus.CONFLICT, "VIOLACAO_INTEGRIDADE",
                 "Operação viola restrições de integridade do banco de dados.");
     }
 
-    // 400 - erro de sintaxe SQL (opcional, útil durante dev com JDBC puro)
+    // 400 - erro de sintaxe SQL
     @ExceptionHandler(SQLSyntaxErrorException.class)
     public ResponseEntity<ApiError> handleSqlSyntax(SQLSyntaxErrorException ex, HttpServletRequest req) {
         return build(req, HttpStatus.BAD_REQUEST, "ERRO_SINTAXE_SQL",
                 "Consulta inválida. Verifique a sintaxe da operação.");
     }
 
-    // 422 - validação de DTO (vamos aproveitar no próximo passo)
+    // 422 - validação de DTO
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
         ApiError body = new ApiError(
@@ -78,10 +78,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(java.sql.SQLException.class)
     public ResponseEntity<ApiError> handleSqlGeneric(java.sql.SQLException ex, HttpServletRequest req) {
-        // Ex.: ORA-01438: value larger than specified precision for column "…"
-        int vendorCode = ex.getErrorCode();     // código vendor (Oracle)
-        String sqlState = ex.getSQLState();     // pode ser null
-        String msg = ex.getMessage();           // mensagem completa do driver
+        int vendorCode = ex.getErrorCode();
+        String sqlState = ex.getSQLState();
+        String msg = ex.getMessage();
 
         String detalhe = "SQL(" + vendorCode + (sqlState != null ? ", state=" + sqlState : "") + "): " + msg;
 

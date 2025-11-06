@@ -3,6 +3,9 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { login } from '../../api';
 import { Title, Form, Label, Input, Button } from '../common/styled';
+import '../../styles/global.css';
+
+import logoEspaco from '../../assets/logo.png';
 
 const schema = Yup.object({
   username: Yup.string().required('Obrigatório'),
@@ -15,7 +18,9 @@ export default function LoginForm({ onSuccess }) {
 
   return (
     <>
-      <Title>Login</Title>
+      <Title><img src={logoEspaco} alt="" /></Title>
+      <br />
+      <Title>LOGIN</Title>
       {attempts >= maxAttempts ? (
         <p style={{ textAlign: 'center', color: 'red' }}>
           Você excedeu o número máximo de tentativas. Tente novamente mais tarde.
@@ -50,9 +55,9 @@ export default function LoginForm({ onSuccess }) {
               <Label>Senha:</Label>
               <Field type="password" as={Input} name="password" disabled={isSubmitting} />
               <ErrorMessage name="password" component="div" />
-
-              <Button type="submit" disabled={isSubmitting}>
-                Entrar
+              
+              <Button className='recarregar' style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '20px'}} type="submit" disabled={isSubmitting}>
+                ENTRAR
               </Button>
             </Form>
           )}

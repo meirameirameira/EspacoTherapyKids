@@ -1,33 +1,54 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import '../styles/global.css';
+import { logout as apiLogout } from '../api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Nav = styled.nav`
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin: 16px 0;
-`;
+export default function Navbar({ onLogout }) {
+  const [term, setTerm] = useState('');
+  const navigate = useNavigate();
 
-const LinkButton = styled(NavLink)`
-  padding: 8px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-  background: #3498db;
-  color: white;
-  &.active {
-    background: #2980b9;
+  function onSubmit(e) {
+    e.preventDefault();
+    const q = term.trim();
+    if (!q) return;
+
+    const onlyDigits = /^\d+$/.test(q);
+    if (onlyDigits) {
+      navigate(`/listar?by=id&q=${encodeURIComponent(q)}`);
+    } else {
+      navigate(`/listar?by=nome&q=${encodeURIComponent(q)}`);
+    }
   }
-`;
 
-export default function Navbar() {
+  function handleLogout() {
+    apiLogout();
+    onLogout?.();
+    navigate('/', { replace: true });
+  }
+
   return (
-    <Nav>
-      <LinkButton to="/cadastrar">Cadastrar</LinkButton>
-      <LinkButton to="/listar">Listar</LinkButton>
-      <LinkButton to="/pesquisar">Pesquisar</LinkButton>
-      <LinkButton to="/atualizar">Atualizar</LinkButton>
-      <LinkButton to="/remover">Remover</LinkButton>
-    </Nav>
+    <nav className="navbar">
+      <Link className="nav-left" to="/listar">
+        <FontAwesomeIcon icon="fa-solid fa-house" /> Menu
+      </Link>
+
+      <form className="nav-search" onSubmit={onSubmit}>
+        <input
+          type="text"
+          placeholder="Buscar por nome ou ID..."
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          style={{ padding: '6px 8px', minWidth: 260, border: '1px solid #ccc', borderRadius: 4 }}
+        />
+        <button className="recarregar" type="submit">
+          Buscar <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
+        </button>
+      </form>
+
+      <button className="nav-right" onClick={handleLogout}>
+        Logout <FontAwesomeIcon icon="fa-solid fa-right-from-bracket" />
+      </button>
+    </nav>
   );
 }

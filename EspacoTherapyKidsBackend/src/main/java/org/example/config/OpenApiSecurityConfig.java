@@ -17,7 +17,6 @@ public class OpenApiSecurityConfig {
                 .bearerFormat("UUID"); // apenas informativo na doc
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes("bearerAuth", bearer))
-                // aplica "bearerAuth" globalmente (todos os endpoints mostram Authorize)
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }

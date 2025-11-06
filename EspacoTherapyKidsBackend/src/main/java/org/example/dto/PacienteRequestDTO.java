@@ -26,7 +26,6 @@ public class PacienteRequestDTO {
 
     public PacienteRequestDTO() { }
 
-    // getters/setters
     public Long getNrResponsavel() { return nrResponsavel; }
     public void setNrResponsavel(Long nrResponsavel) { this.nrResponsavel = nrResponsavel; }
     public String getNmResponsavel() { return nmResponsavel; }

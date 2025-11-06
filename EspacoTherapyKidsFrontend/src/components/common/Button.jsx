@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
 const Button = styled.button`
-  width: 100%;
+  width: 50%;
   padding: 12px;
-  font-size: 1rem;
   color: #fff;
   background-color: ${props =>
-    props.variant === 'danger' ? '#e74c3c' : '#3498db'};
+    props.variant === 'danger' ? '#e74c3c' : '#e72d7e'};
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -14,7 +13,7 @@ const Button = styled.button`
 
   &:hover {
     background-color: ${props =>
-      props.variant === 'danger' ? '#c0392b' : '#2980b9'};
+      props.variant === 'danger' ? '#c0392b' : '#b4195d'};
   }
 `;
 

@@ -20,7 +20,7 @@ export default function SearchPatient() {
 
   return (
     <>
-      <h2 style={{ textAlign: 'center' }}>Pesquisar Paciente</h2>
+      <h2>Pesquisar Paciente</h2>
       <SearchById
         id={id}
         onChangeId={setId}

@@ -20,7 +20,6 @@ public class PacienteDao {
     private final Connection conexao;
     public PacienteDao() throws SQLException { this.conexao = ConnectionFactory.getConnection(); }
 
-    // Helpers numéricos
     private BigDecimal bd2(double v) { return BigDecimal.valueOf(v).setScale(2, RoundingMode.HALF_UP); }
     private double preco(Sessao s) { return s != null ? s.getPreco() : 0.0; }
     private int horas(Sessao s)    { return s != null ? s.getHoras() : 0; }
@@ -48,7 +47,6 @@ public class PacienteDao {
                         ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " +
                         "RETURNING cd_paciente INTO ?";
 
-        // use OraclePreparedStatement para suportar RETURNING ... INTO ?
         try (OraclePreparedStatement stm = (OraclePreparedStatement) conexao.prepareStatement(sql)) {
             int i = 1;
 
@@ -79,15 +77,12 @@ public class PacienteDao {
             stm.setBigDecimal(i++, bd2(remb(a)));
             stm.setInt       (i++, nfAbaSeguro(a));
 
-            // -- parâmetro de retorno da PK
             stm.registerReturnParameter(i, OracleTypes.NUMBER);
 
             stm.executeUpdate();
 
-            // pega a PK retornada com segurança
             try (ResultSet rs = stm.getReturnResultSet()) {
                 if (rs != null && rs.next()) {
-                    // Oracle retorna NUMBER -> BigDecimal
                     java.math.BigDecimal id = rs.getBigDecimal(1);
                     if (id != null) p.setCodigo(id.longValue());
                 }

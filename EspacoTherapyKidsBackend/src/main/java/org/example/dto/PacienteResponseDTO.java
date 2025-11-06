@@ -23,7 +23,6 @@ public class PacienteResponseDTO {
         this.aba = aba;
     }
 
-    // getters/setters
     public long getCodigo() { return codigo; }
     public void setCodigo(long codigo) { this.codigo = codigo; }
     public Long getNrResponsavel() { return nrResponsavel; }

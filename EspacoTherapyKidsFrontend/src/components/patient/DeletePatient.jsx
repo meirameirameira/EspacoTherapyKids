@@ -33,7 +33,7 @@ export default function RemovePatient() {
 
   return (
     <>
-      <h2 style={{ textAlign: 'center' }}>Remover Paciente</h2>
+      <h2>Remover Paciente</h2>
       <SearchById
         id={id}
         onChangeId={setId}

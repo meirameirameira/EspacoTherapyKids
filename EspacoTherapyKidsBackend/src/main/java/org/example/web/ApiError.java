@@ -10,10 +10,10 @@ public class ApiError {
     private OffsetDateTime timestamp;
     private String path;
     private int status;
-    private String error;     // ex.: "Not Found"
-    private String code;      // ex.: "ENTIDADE_NAO_ENCONTRADA"
-    private String message;   // mensagem amigável
-    private List<FieldError> fieldErrors; // validação de DTO (próximo passo)
+    private String error;
+    private String code;
+    private String message;
+    private List<FieldError> fieldErrors;
 
     public ApiError() { }
 
@@ -26,7 +26,6 @@ public class ApiError {
         this.message = message;
     }
 
-    // GETTERS/SETTERS
     public OffsetDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(OffsetDateTime timestamp) { this.timestamp = timestamp; }
 

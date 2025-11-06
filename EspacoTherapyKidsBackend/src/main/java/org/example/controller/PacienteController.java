@@ -17,6 +17,10 @@ import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/pacientes")
@@ -117,4 +121,76 @@ public class PacienteController {
         dao.remover(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/export")
+    public void exportPacientesXlsx(HttpServletResponse resp) throws Exception {
+        var lista = dao.listar();
+
+        try (Workbook wb = new XSSFWorkbook()) {
+            Sheet sh = wb.createSheet("Pacientes");
+            int rowIdx = 0;
+
+            CellStyle headerStyle = wb.createCellStyle();
+            var bold = wb.createFont(); bold.setBold(true);
+            headerStyle.setFont(bold);
+
+            Row h = sh.createRow(rowIdx++);
+            String[] cols = {
+                    "Código", "Nome", "Nome Responsável", "Contato Responsável",
+                    "Fono Preço", "Fono Horas", "Fono Reembolso", "Fono Total", "Fono NF",
+                    "TO Preço", "TO Horas", "TO Reembolso", "TO Total", "TO NF",
+                    "ABA Preço", "ABA Reembolso", "ABA NF"
+            };
+            for (int i=0;i<cols.length;i++) {
+                Cell c = h.createCell(i);
+                c.setCellValue(cols[i]);
+                c.setCellStyle(headerStyle);
+            }
+
+            for (var p : lista) {
+                Row r = sh.createRow(rowIdx++);
+
+                // dados base
+                int c=0;
+                r.createCell(c++).setCellValue(p.getCodigo());
+                r.createCell(c++).setCellValue(nvl(p.getNome()));
+                r.createCell(c++).setCellValue(nvl(p.getNmResponsavel()));
+                r.createCell(c++).setCellValue(p.getNrResponsavel() == null ? "" : String.valueOf(p.getNrResponsavel()));
+
+                // Fono
+                var f = p.getFono();
+                r.createCell(c++).setCellValue(f != null ? f.getPreco() : 0);
+                r.createCell(c++).setCellValue(f != null ? f.getHoras() : 0);
+                r.createCell(c++).setCellValue(f != null ? f.getReembolsoInformado() : 0);
+                r.createCell(c++).setCellValue(f != null ? f.calcularTotal() : 0);
+                r.createCell(c++).setCellValue(f != null ? f.calcularNF() : 0);
+
+                // TO
+                var t = p.getTerapiaOcupacional();
+                r.createCell(c++).setCellValue(t != null ? t.getPreco() : 0);
+                r.createCell(c++).setCellValue(t != null ? t.getHoras() : 0);
+                r.createCell(c++).setCellValue(t != null ? t.getReembolsoInformado() : 0);
+                r.createCell(c++).setCellValue(t != null ? t.calcularTotal() : 0);
+                r.createCell(c++).setCellValue(t != null ? t.calcularNF() : 0);
+
+                // ABA
+                var a = p.getAba();
+                r.createCell(c++).setCellValue(a != null ? a.getPreco() : 0);
+                r.createCell(c++).setCellValue(a != null ? a.getReembolsoInformado() : 0);
+                r.createCell(c++).setCellValue(a != null ? a.calcularNF() : 0);
+            }
+
+            // Ajusta largura das colunas
+            for (int i=0;i<cols.length;i++) sh.autoSizeColumn(i);
+
+            // Resposta
+            resp.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            resp.setHeader("Content-Disposition", "attachment; filename=\"pacientes.xlsx\"");
+            wb.write(resp.getOutputStream());
+            resp.flushBuffer();
+        }
+    }
+
+    // helper simples
+    private String nvl(String s) { return s == null ? "" : s; }
 }

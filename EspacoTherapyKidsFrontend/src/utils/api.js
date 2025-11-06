@@ -1,4 +1,3 @@
-// src/api.js
 const BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
 
 function authHeader() {
@@ -26,9 +25,7 @@ async function http(path, { method = 'GET', body, headers } = {}) {
   return data;
 }
 
-/** ============ AUTH ============ */
 export async function login({ username, password }) {
-  // CORRIGIDO: /api/auth/login (não /api/login)
   const data = await http('/auth/login', { method: 'POST', body: { username, password } });
   localStorage.setItem('token', data.accessToken);
   return data.accessToken;
@@ -37,7 +34,6 @@ export function logout() {
   localStorage.removeItem('token');
 }
 
-/** ============ PACIENTES ============ */
 export async function fetchPacientes({ nome, nmResponsavel, page = 0, size = 10, sortBy = 'codigo', sortDir = 'asc' } = {}) {
   const qs = new URLSearchParams();
   if (nome) qs.set('nome', nome);
@@ -48,8 +44,27 @@ export async function fetchPacientes({ nome, nmResponsavel, page = 0, size = 10,
   qs.set('sortDir', sortDir);
 
   const pageResp = await http(`/pacientes?${qs.toString()}`);
-  // seu controller retorna PageResponse; a tabela usa array:
   return pageResp?.content ?? pageResp ?? [];
+}
+
+export async function exportPacientesXlsx() {
+  const res = await fetch(`${BASE}/pacientes/export`, {
+    method: 'GET',
+    headers: { ...authHeader() },
+  });
+  if (!res.ok) {
+    const msg = `Falha ao exportar (HTTP ${res.status})`;
+    throw new Error(msg);
+  }
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'pacientes.xlsx';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
 }
 
 export const fetchPacienteById  = (id)      => http(`/pacientes/${id}`);
